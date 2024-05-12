@@ -1,0 +1,36 @@
+<!DOCTYPE html> <!-- объявляем тип документа -->
+<html> <!-- начало тега html -->
+    <head> <!-- начало тега head -->
+        <meta charset="UTF-8"> <!-- кодировка страницы -->
+        <title>Client</title> <!-- заголовок страницы -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> <!-- подключаем стили Bootstrap -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> <!-- подключаем jQuery -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> <!-- подключаем скрипты Bootstrap -->
+        <script> 
+            /* Клиентский скрипт для отправки запросов на сервер */
+            window.onload = function() { // после загрузки страницы
+                const requests = []; // массив для хранения времени запросов
+                document.getElementById('requestButton').addEventListener('click', function() { // при клике на кнопку
+                    const requestTime = new Date(); // время запроса
+                    requests.push(requestTime); // добавляем время запроса в массив
+                    fetch('http://localhost:3000/') // отправляем запрос на сервер
+                        .then(response => response.text()) // получаем ответ в виде текста
+                        .then(data => { // обрабатываем ответ
+                            const responseTime = new Date(); // время ответа
+                            document.getElementById('welcome').innerHTML = `<h1>${data}</h1>`; // выводим приветствие
+                            document.getElementById('content').innerHTML = `Client time: ${responseTime}`; // выводим время ответа
+                            document.getElementById('content').innerHTML += '<br>Client requests:<br>' + requests.join('<br>'); // выводим время запросов
+                            document.getElementById('requestButton').remove(); // удаляем кнопку
+                            alert('Запрос отправлен'); // выводим сообщение
+                        })
+                        .catch(error => console.error('Error:', error)); // выводим ошибку в консоль
+                });
+            };
+        </script>
+    </head>
+    <body>
+        <h1 id="welcome">Добро пожаловать!</h1> <!-- приветствие -->
+        <button id="requestButton" class="btn btn-primary">Отправить запрос</button> <!-- кнопка для отправки запроса -->
+        <div id="content"></div> <!-- контент -->
+    </body>
+</html>
